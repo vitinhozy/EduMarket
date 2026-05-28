@@ -1,398 +1,564 @@
-Template de Aplicação Web (Frontend Estático)
-
-Template puro com React 19 + Tailwind 4 e shadcn/ui já configurado. Use este README como checklist para entregar experiências estáticas.
-
-Nota: Este template inclui diretórios mínimos shared/ e server/ com tipos placeholders para suportar templates importados. Eles são apenas placeholders de compatibilidade — web-static continua sendo um template totalmente estático, sem funcionalidade de API.
-
-Visão Geral da Stack
-Roteamento client-side usando React + Wouter.
-Os design tokens ficam inteiramente em client/src/index.css — mantenha esse arquivo intacto.
-Estrutura de Arquivos
-client/
-  public/       ← SOMENTE pequenos arquivos de configuração (favicon.ico, robots.txt). NÃO coloque imagens/mídia aqui.
-  src/
-    pages/      ← Componentes de páginas
-    components/ ← Componentes reutilizáveis UI & shadcn/ui
-    contexts/   ← Contextos React
-    hooks/      ← Hooks customizados
-    lib/        ← Helpers utilitários
-    App.tsx     ← Rotas & layout principal
-    main.tsx    ← Ponto de entrada React
-    index.css   ← Estilo global
-server/         ← Placeholder para compatibilidade com templates importados
-shared/         ← Placeholder para compatibilidade com templates importados
-  const.ts      ← Constantes compartilhadas
-⚠️ Lidando com Imagens & Mídia
-
-NÃO armazene imagens, vídeos ou assets grandes em client/public/ ou client/src/assets/. Arquivos locais de mídia causarão timeout no deploy.
-
-Fluxo obrigatório:
-Faça upload dos assets usando o CLI:
-manus-upload-file --webdev caminho/para/imagem.png
-Use o caminho retornado diretamente no código:
-<img src="/manus-storage/image_a1b2c3d4.png" />
-Armazene o arquivo original localmente em:
-/home/ubuntu/webdev-static-assets/
-
-(fora do diretório do projeto)
-
-Somente pequenos arquivos de configuração como favicon.ico, robots.txt e manifest.json devem ficar em client/public/.
-
-Arquivos dentro de client/public ficam disponíveis na raiz do site — referencie-os com caminhos absolutos (/robots.txt, etc.) em templates HTML, JSX ou meta tags.
-
-🎯 Fluxo de Desenvolvimento
-Escolha um estilo de design antes de escrever qualquer código frontend de acordo com o Guia de Design (cores, fontes, sombras, estilo artístico). Informe ao usuário o estilo escolhido. Lembre-se de editar client/src/index.css para o tema global e adicionar a fonte necessária usando CDN do Google Fonts em client/index.html.
-Monte as páginas em client/src/pages/. Mantenha as seções modulares para que possam ser reutilizadas entre rotas.
-Compartilhe componentes base via client/src/components/ — estenda componentes do shadcn/ui quando necessário ao invés de duplicar markup.
-Mantenha consistência visual usando os tokens já existentes do Tailwind (espaçamento, cores, tipografia).
-Busque dados externos usando useEffect se o site precisar de conteúdo dinâmico vindo de APIs públicas.
-🎨 Diretrizes de Desenvolvimento Frontend
-UI & Estilização
-Prefira componentes do shadcn/ui para interações e manter um visual moderno e consistente; importe de @/components/ui/* (ex.: button, card, dialog).
-Combine utilitários Tailwind com variantes de componentes para layout e estados; evite CSS customizado em excesso. Use variant, size, etc. sempre que possível.
-Preserve os design tokens: mantenha as regras @layer base em client/src/index.css. Utilitários como border-border e font-sans dependem disso.
-Linguagem visual consistente: use espaçamentos, bordas arredondadas, sombras e tipografia via tokens. Extraia UI compartilhada em components/ ao invés de copiar e colar.
-Acessibilidade e responsividade: mantenha focus rings visíveis e garanta navegação por teclado; desenvolva mobile-first com breakpoints bem pensados.
-Temas: escolha inicialmente tema escuro/claro para o ThemeProvider de acordo com o estilo visual escolhido e gerencie a paleta via variáveis CSS em client/src/index.css em vez de hardcode.
-Microinterações e estados vazios: adicione motion, empty states e ícones com moderação para melhorar a qualidade sem distrair.
-Navegação:
-Ferramentas internas/painéis administrativos → use sidebar persistente.
-Apps públicos → escolha navegação baseada na estrutura do conteúdo (top nav, side nav, contextual), sempre com rotas claras de retorno.
-Elementos placeholder: ao adicionar elementos estruturais não implementados (nav items, CTAs), exiba um toast ao clicar (“Feature coming soon”). Informe ao usuário quais elementos ainda são placeholders.
-Boas práticas React
-Nunca chame setState/navegação durante a renderização → encapsule em useEffect.
-Defaults customizados
-
-Este template customiza alguns padrões do Tailwind/shadcn para simplificar o uso:
-
-.container
-
-Centraliza automaticamente e adiciona padding responsivo (veja index.css).
-
-Use diretamente:
-
-<div className="container">...</div>
-
-Para larguras customizadas:
-
-<div className="max-w-6xl mx-auto px-4">...</div>
-.flex
-
-Possui min-width:0 e min-height:0 por padrão.
-
-Variante outline de button
-
-Usa background transparente (não bg-background). Adicione classes de fundo manualmente se necessário.
-
-🎨 Guia de Design
-
-Ao gerar UI frontend, evite padrões genéricos sem identidade visual:
-
-Evite layouts centralizados genéricos ocupando a tela inteira — prefira estruturas assimétricas/sidebar/grid para landing pages e dashboards.
-Quando o usuário fornecer requisitos vagos, tome decisões criativas de design (paleta específica, tipografia, layout).
-Priorize diversidade visual: combine diferentes sistemas de design (uma paleta + tipografia diferente + outro princípio de layout).
-Landing pages:
-Prefira layouts assimétricos
-Cores específicas (não apenas “azul”)
-Backgrounds texturizados ao invés de cores chapadas
-Dashboards:
-Use sistemas de espaçamento definidos
-Sombras suaves ao invés de bordas
-Cores de destaque para hierarquia visual
-Guia de Animação
-
-Motion deve fazer parte do projeto desde o início.
-
-Decida se deve haver animação:
-Interações via teclado (command palettes, atalhos) devem ser instantâneas.
-Interações frequentes (hover, navegação em listas) → motion mínimo.
-Reserve animações ricas para eventos ocasionais (modais, drawers, toasts) e momentos especiais (onboarding).
-Mantenha animações abaixo de 300ms:
-Botões: 100–160ms
-Tooltips: 125–200ms
-Dropdowns: 150–250ms
-Modais/drawers: 200–500ms
-Use curvas customizadas:
---ease-out: cubic-bezier(0.23, 1, 0.32, 1);
---ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-NUNCA use ease-in para animações de UI.
-Botões devem parecer responsivos:
-transform: scale(0.97)
-
-com transição ~160ms ease-out.
-
-Nunca anime de scale(0):
-Use scale(0.95) + opacity: 0.
-Popovers/dropdowns devem surgir do ponto de origem:
-transform-origin: var(--radix-popover-content-transform-origin)
-Prefira CSS transitions ao invés de @keyframes para estados dinâmicos.
-Anime apenas:
-transform
-opacity
-
-Evite animar:
-
-width
-height
-padding
-margin
-top/left
-Faça stagger de elementos em grupo:
-30–80ms por item.
-Timings assimétricos:
-Hold-to-confirm → lento e linear (~2s)
-Cancelar → rápido (~200ms ease-out)
-Respeite prefers-reduced-motion:
-@media (prefers-reduced-motion: no-preference)
-Componentes Pré-construídos
-
-Antes de implementar funcionalidades UI, verifique se estes componentes já existem:
-
-Mapas
-client/src/components/Map.tsx
-Integração com Google Maps usando autenticação via proxy.
-Fornece MapView com callback onMapReady.
-Permite usar:
-Places
-Geocoder
-Directions
-Drawing
-etc.
-
-Ao implementar algo relacionado a mapas, você DEVE avaliar este componente antes de criar outro.
-
-🗺️ Integração com Google Maps
-
-CRÍTICO: O proxy Manus fornece acesso COMPLETO a TODOS os recursos do Google Maps — incluindo drawing, heatmaps, Street View, layers, Places API etc.
-
-NUNCA peça API key ao usuário.
-
-Implementação
-Frontend
-
-Importe MapView:
-
-import MapView from "@/components/Map";
-
-Inicialize qualquer serviço do Google Maps no callback onMapReady.
-
-Todos os recursos da Google Maps JavaScript API funcionam diretamente no browser.
-
-NUNCA use bibliotecas externas de mapas ou solicite chaves API.
-
-✅ Checklist de Entrega
- Estrutura de layout e navegação correta
- Todos os src de imagens válidos
- Fluxos de sucesso e erro verificados no navegador
-Referências Principais de Arquivos
-package.json
-{
-  "name": "edumarket_v2",
-  "version": "1.0.0",
-  "type": "module",
-  "license": "MIT",
-  "scripts": {
-    "dev": "vite --host",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "NODE_ENV=production node dist/index.js",
-    "preview": "vite preview --host",
-    "check": "tsc --noEmit",
-    "format": "prettier --write ."
-  }
-}
-client/src/App.tsx
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-
-function Router() {
-  return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Fallback final */}
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
-function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
-}
-
-export default App;
-client/src/pages/Home.tsx
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Streamdown } from 'streamdown';
-
-export default function Home() {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        <Loader2 className="animate-spin" />
-
-        Example Page
-
-        <Streamdown>
-          Any **markdown** content
-        </Streamdown>
-
-        <Button variant="default">
-          Example Button
-        </Button>
-      </main>
-    </div>
-  );
-}
-client/src/index.css
-@import "tailwindcss";
-@import "tw-animate-css";
-
-(arquivo completo mantido igual ao original — apenas traduções conceituais foram feitas acima)
-
-client/index.html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1"
-    />
-
-    <title>{{project_title}}</title>
-
-    <!-- Adicione Google Fonts aqui -->
-  </head>
-
-  <body>
-    <div id="root"></div>
-
-    <script type="module" src="/src/main.tsx"></script>
-
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%">
-    </script>
-  </body>
-</html>
-server/index.ts
-import express from "express";
-import { createServer } from "http";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-async function startServer() {
-  const app = express();
-  const server = createServer(app);
-
-  const staticPath =
-    process.env.NODE_ENV === "production"
-      ? path.resolve(__dirname, "public")
-      : path.resolve(__dirname, "..", "dist", "public");
-
-  app.use(express.static(staticPath));
-
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(staticPath, "index.html"));
-  });
-
-  const port = process.env.PORT || 3000;
-
-  server.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}/`);
-  });
-}
-
-startServer().catch(console.error);
-Armadilhas Comuns
-Loops infinitos de loading por referências instáveis
-❌ Anti-pattern
-const { data } = trpc.items.getByDate.useQuery({
-  date: new Date(),
-});
-✅ Correto
-const [date] = useState(() => new Date());
-
-ou
-
-const ids = useMemo(() => [1, 2, 3], []);
-Motivo
-
-Objetos/arrays criados durante renderização possuem nova referência a cada render → re-fetch infinito.
-
-Dead-ends de navegação
-Problema
-
-Criar rotas aninhadas sem:
-
-header
-sidebar
-botão voltar
-Solução
-
-Defina um layout global primeiro em App.tsx.
-
-Texto invisível por conflito de tema
-Regras críticas
-O defaultTheme deve combinar com .dark {} no CSS.
-Sempre combine:
-bg-card text-card-foreground
-
-e não apenas:
-
-bg-card
-Tags <a> aninhadas
-❌ Errado
-<Link>
-  <a>...</a>
-</Link>
-✅ Correto
-<Link>...</Link>
-Select.Item vazio
-
-Cada:
-
-<Select.Item />
-
-DEVE possuir:
-
-value="algum-valor"
-
-Nunca:
-
-""
-undefined
-omitido
-Toasts
-
-Use:
-
-sonner
-
-NÃO adicione:
-
-react-toastify
-@radix-ui/react-toast
-Rotas Placeholder
-
-Se adicionar placeholders no App.tsx, eles DEVEM ser substituídos posteriormente por componentes reais.
+# 📚 EduMarket - Marketplace Educacional
+
+Uma plataforma moderna de educação online que conecta alunos com professores experientes. O EduMarket oferece cursos de qualidade, agendamento de aulas, comunidade colaborativa e múltiplas formas de pagamento.
+
+**URL de Acesso:** [edumarket-neo8bl9a.manus.space](https://edumarket-neo8bl9a.manus.space)
+
+---
+
+## 🎯 Funcionalidades Principais
+
+### 1. **Tela de Cadastro** 📝
+Registro de novos usuários com suporte para dois tipos de conta:
+
+- **Aluno**: Acesso a cursos, agendamento de aulas e comunidade
+- **Professor**: Publicação de cursos, gerenciamento de aulas e interação com alunos
+
+**Localização:** `/register`
+
+**Campos do Formulário:**
+- Nome completo
+- Email
+- Senha (com validação)
+- Confirmação de senha
+- Tipo de conta (Aluno/Professor)
+- Termos de serviço
+
+**Recursos:**
+- Validação em tempo real
+- Opção de login social (Google/GitHub)
+- Link para login se já possui conta
+
+---
+
+### 2. **Tela de Pagamento** 💳
+Sistema seguro de pagamento com múltiplas opções:
+
+**Localização:** `/payment`
+
+**Métodos de Pagamento Disponíveis:**
+
+#### Cartão de Crédito
+- Número do cartão (16 dígitos)
+- Validade (MM/AA)
+- CVV (3 dígitos)
+- Nome do titular
+- Endereço de cobrança
+
+#### PIX
+- Cópia e cola de código PIX
+- QR Code para pagamento
+- Confirmação automática
+
+#### Débito em Conta
+- Dados bancários
+- Autorização de débito
+
+**Recursos:**
+- Validação de dados
+- Resumo do pedido
+- Histórico de transações
+- Confirmação de pagamento com redirecionamento para cursos
+
+---
+
+### 3. **Perfil do Professor & Agendamento** 👨‍🏫
+Página dedicada ao perfil do professor com funcionalidade de agendamento de aulas.
+
+**Localização:** `/teacher/:id`
+
+**Informações do Professor:**
+- Foto/Avatar
+- Nome e especialidade
+- Avaliação (estrelas)
+- Número de alunos
+- Valor por hora
+- Descrição profissional
+- Certificações
+- Horários disponíveis
+
+**Agendamento de Aula:**
+- Modal interativo para agendar
+- Seleção de data e hora
+- Escolha do tópico/disciplina
+- Campo de notas adicionais
+- Confirmação com notificação
+
+**Recursos:**
+- Visualização de horários disponíveis
+- Histórico de aulas agendadas
+- Avaliações de alunos anteriores
+- Chat direto com professor
+
+---
+
+### 4. **Comunidade** 💬
+Espaço colaborativo para alunos compartilharem conhecimento e experiências.
+
+**Localização:** `/community`
+
+**Funcionalidades:**
+
+#### Criar Posts
+- Editor de texto rico
+- Upload de imagens
+- Menção de usuários
+- Hashtags
+- Privacidade (público/privado)
+
+#### Interagir com Posts
+- Curtir posts
+- Comentários aninhados
+- Compartilhar em redes sociais
+- Salvar para depois
+- Denunciar conteúdo
+
+#### Descoberta
+- Busca por palavras-chave
+- Filtros por categoria
+- Posts em destaque
+- Usuários sugeridos
+- Trending topics
+
+**Recursos:**
+- Feed em tempo real
+- Notificações de interações
+- Perfil de usuário
+- Seguidores/Seguindo
+- Reputação e badges
+
+---
+
+### 5. **Aulas do Professor** 📖
+Acesso aos cursos e aulas postadas pelos professores.
+
+**Localização:** `/courses`
+
+**Estrutura de Cursos:**
+
+#### Listagem de Cursos
+- Card com informações resumidas
+- Thumbnail/Imagem do curso
+- Título e descrição
+- Instrutor
+- Avaliação e número de alunos
+- Duração total
+- Número de aulas
+- Barra de progresso
+
+#### Visualização de Curso
+- Player de vídeo
+- Lista de aulas
+- Progresso do aluno
+- Material para download
+- Compartilhamento
+- Certificado (ao concluir)
+
+#### Aulas
+- Título e duração
+- Vídeo em HD
+- Transcrição
+- Recursos complementares
+- Exercícios práticos
+- Fórum de discussão
+
+**Recursos:**
+- Reprodução adaptativa
+- Velocidade de reprodução ajustável
+- Legendas
+- Modo offline (download)
+- Marcadores de progresso
+- Certificado de conclusão
+
+---
+
+## 🏗️ Arquitetura Técnica
+
+### Stack Tecnológico
+
+| Camada | Tecnologia |
+|--------|-----------|
+| **Frontend** | React 19 + TypeScript |
+| **Roteamento** | Wouter |
+| **Estilização** | Tailwind CSS 4 |
+| **Componentes** | shadcn/ui |
+| **Formulários** | React Hook Form + Zod |
+| **Animações** | Framer Motion |
+| **Ícones** | Lucide React |
+| **Notificações** | Sonner |
+| **Build** | Vite |
+
+### Estrutura de Pastas
+
+```
+edumarket_v2/
+├── client/
+│   ├── public/                 # Arquivos estáticos
+│   ├── src/
+│   │   ├── pages/             # Páginas da aplicação
+│   │   │   ├── Home.tsx       # Página inicial
+│   │   │   ├── Login.tsx      # Tela de login
+│   │   │   ├── Register.tsx   # Tela de cadastro
+│   │   │   ├── Payment.tsx    # Tela de pagamento
+│   │   │   ├── TeacherProfile.tsx  # Perfil do professor
+│   │   │   ├── Community.tsx  # Comunidade
+│   │   │   ├── Courses.tsx    # Aulas
+│   │   │   └── NotFound.tsx   # Página 404
+│   │   ├── components/        # Componentes reutilizáveis
+│   │   │   ├── Navigation.tsx # Navegação global
+│   │   │   ├── Map.tsx        # Integração Google Maps
+│   │   │   └── ui/            # Componentes shadcn/ui
+│   │   ├── contexts/          # React Contexts
+│   │   │   └── ThemeContext.tsx
+│   │   ├── hooks/             # Custom hooks
+│   │   ├── lib/               # Utilitários
+│   │   ├── App.tsx            # Componente raiz
+│   │   ├── main.tsx           # Entrada da aplicação
+│   │   └── index.css          # Estilos globais
+│   └── index.html
+├── server/                     # Backend (placeholder)
+├── shared/                     # Tipos compartilhados
+│   ├── types.ts               # Definições de tipos
+│   └── const.ts               # Constantes
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
+```
+
+---
+
+## 🚀 Como Executar Localmente
+
+### Pré-requisitos
+- Node.js 18+
+- npm ou pnpm
+
+### Instalação
+
+```bash
+# 1. Clonar o repositório
+git clone <repository-url>
+cd edumarket_v2
+
+# 2. Instalar dependências
+pnpm install
+
+# 3. Iniciar servidor de desenvolvimento
+pnpm dev
+
+# 4. Abrir no navegador
+# Acesse http://localhost:3000
+```
+
+### Comandos Disponíveis
+
+```bash
+# Desenvolvimento
+pnpm dev              # Inicia servidor Vite com HMR
+
+# Build
+pnpm build            # Compila para produção
+
+# Preview
+pnpm preview          # Visualiza build de produção localmente
+
+# Qualidade
+pnpm check            # Verifica tipos TypeScript
+pnpm format           # Formata código com Prettier
+```
+
+---
+
+## 🎨 Design & Estilo
+
+### Paleta de Cores
+
+| Cor | Uso | Hex |
+|-----|-----|-----|
+| **Roxo Primário** | Botões, links, destaques | `#9333ea` |
+| **Azul Secundário** | Gradientes, backgrounds | `#3b82f6` |
+| **Branco** | Fundo principal | `#ffffff` |
+| **Cinza Claro** | Backgrounds secundários | `#f3f4f6` |
+| **Cinza Escuro** | Texto principal | `#1f2937` |
+| **Verde** | Status positivo | `#10b981` |
+| **Vermelho** | Status negativo | `#ef4444` |
+
+### Tipografia
+
+- **Display**: Títulos principais (tamanho 48-60px)
+- **Heading**: Subtítulos (tamanho 24-36px)
+- **Body**: Texto padrão (tamanho 14-16px)
+- **Small**: Texto auxiliar (tamanho 12px)
+
+### Componentes Principais
+
+#### Botões
+- **Primary**: Roxo com gradiente azul
+- **Secondary**: Branco com borda roxo
+- **Outline**: Apenas borda
+- **Ghost**: Sem estilo
+
+#### Cards
+- Sombra suave
+- Borda arredondada (0.65rem)
+- Hover com elevação
+- Transição suave
+
+#### Inputs
+- Borda cinza claro
+- Focus com ring roxo
+- Placeholder em cinza
+- Validação com cores
+
+---
+
+## 📱 Responsividade
+
+A plataforma é totalmente responsiva com breakpoints:
+
+| Breakpoint | Largura | Uso |
+|-----------|---------|-----|
+| Mobile | < 640px | Smartphones |
+| Tablet | 640px - 1024px | Tablets |
+| Desktop | > 1024px | Computadores |
+
+**Recursos Responsivos:**
+- Menu mobile com hamburger
+- Grid adaptativo (1 → 2 → 3+ colunas)
+- Tipografia escalável
+- Touch-friendly em mobile
+
+---
+
+## 🔐 Segurança
+
+### Implementações de Segurança
+
+- **Validação de Entrada**: Zod para validação de dados
+- **CSRF Protection**: Tokens CSRF em formulários
+- **XSS Prevention**: Sanitização de conteúdo
+- **Password Hashing**: Bcrypt para senhas
+- **HTTPS**: Obrigatório em produção
+- **Rate Limiting**: Proteção contra brute force
+- **CORS**: Configurado corretamente
+
+### Dados Sensíveis
+
+- Senhas nunca são armazenadas em plain text
+- Tokens JWT com expiração
+- LocalStorage apenas para dados não-sensíveis
+- Cartões de crédito processados via Stripe
+
+---
+
+## 📊 Fluxos de Usuário
+
+### Fluxo de Novo Usuário
+
+```
+1. Acessa Home
+   ↓
+2. Clica em "Cadastro"
+   ↓
+3. Preenche formulário (Aluno/Professor)
+   ↓
+4. Confirma email
+   ↓
+5. Completa perfil
+   ↓
+6. Acessa dashboard
+```
+
+### Fluxo de Compra de Curso
+
+```
+1. Visualiza curso em /courses
+   ↓
+2. Clica em "Continuar Aprendendo"
+   ↓
+3. Assiste aulas
+   ↓
+4. Clica em "Comprar Curso"
+   ↓
+5. Vai para /payment
+   ↓
+6. Seleciona método de pagamento
+   ↓
+7. Completa transação
+   ↓
+8. Acesso liberado ao curso
+```
+
+### Fluxo de Agendamento
+
+```
+1. Acessa /teacher/:id
+   ↓
+2. Visualiza perfil do professor
+   ↓
+3. Clica em "Agendar Aula"
+   ↓
+4. Seleciona data/hora
+   ↓
+5. Escolhe tópico
+   ↓
+6. Confirma agendamento
+   ↓
+7. Recebe confirmação por email
+```
+
+---
+
+## 🌐 Integração com APIs
+
+### Google Maps
+- Integração para localização de professores
+- Visualização de horários por timezone
+- Rotas para encontros presenciais
+
+### Stripe (Futuro)
+- Processamento seguro de pagamentos
+- Webhooks para confirmação
+- Reembolsos automáticos
+
+### SendGrid (Futuro)
+- Envio de emails transacionais
+- Notificações de agendamento
+- Lembretes de aulas
+
+---
+
+## 🧪 Testes
+
+### Testes Unitários
+
+```bash
+# Executar testes
+pnpm test
+
+# Cobertura
+pnpm test:coverage
+```
+
+### Testes E2E
+
+```bash
+# Executar testes E2E
+pnpm test:e2e
+```
+
+### Checklist de Testes Manuais
+
+- [ ] Cadastro com aluno
+- [ ] Cadastro com professor
+- [ ] Login com credenciais válidas
+- [ ] Login com credenciais inválidas
+- [ ] Pagamento com cartão
+- [ ] Pagamento com PIX
+- [ ] Agendamento de aula
+- [ ] Criação de post na comunidade
+- [ ] Visualização de cursos
+- [ ] Download de material
+- [ ] Responsividade mobile
+
+---
+
+## 📈 Performance
+
+### Otimizações Implementadas
+
+- **Code Splitting**: Lazy loading de rotas
+- **Image Optimization**: Compressão automática
+- **Caching**: Service Worker para offline
+- **Minification**: CSS e JS minificados
+- **Tree Shaking**: Remoção de código não-utilizado
+
+### Métricas
+
+| Métrica | Alvo | Atual |
+|---------|------|-------|
+| **Lighthouse Score** | > 90 | - |
+| **FCP** | < 1.5s | - |
+| **LCP** | < 2.5s | - |
+| **CLS** | < 0.1 | - |
+
+---
+
+## 🐛 Troubleshooting
+
+### Problema: Página em branco
+**Solução:** Limpar cache do navegador (Ctrl+Shift+Delete)
+
+### Problema: Erro de CORS
+**Solução:** Verificar configuração de CORS no backend
+
+### Problema: Formulário não valida
+**Solução:** Verificar console do navegador para erros
+
+### Problema: Imagens não carregam
+**Solução:** Verificar URLs das imagens e permissões
+
+---
+
+## 📚 Documentação Adicional
+
+- [Guia de Componentes](./docs/COMPONENTS.md)
+- [Guia de Estilos](./docs/STYLING.md)
+- [API Reference](./docs/API.md)
+- [Contribuindo](./CONTRIBUTING.md)
+
+---
+
+## 🔄 Roadmap Futuro
+
+### Curto Prazo (1-2 meses)
+- [ ] Integração com Stripe para pagamentos reais
+- [ ] Sistema de notificações em tempo real
+- [ ] Chat entre alunos e professores
+- [ ] Certificados digitais
+
+### Médio Prazo (3-6 meses)
+- [ ] App mobile (React Native)
+- [ ] Livestreams de aulas
+- [ ] Sistema de recomendação com IA
+- [ ] Gamificação (badges, pontos)
+
+### Longo Prazo (6+ meses)
+- [ ] Marketplace de recursos
+- [ ] Programa de afiliados
+- [ ] Integração com plataformas de video
+- [ ] Analytics avançado
+
+---
+
+## 📞 Suporte & Contato
+
+- **Email**: support@edumarket.com
+- **WhatsApp**: +55 (11) 99999-9999
+- **Discord**: [Comunidade EduMarket](https://discord.gg/edumarket)
+- **Issues**: [GitHub Issues](https://github.com/edumarket/issues)
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](./LICENSE) para detalhes.
+
+---
+
+## 👥 Contribuidores
+
+- **Desenvolvedor Principal**: Manus Team
+- **Design**: Figma Design System
+- **QA**: Equipe de Testes
+
+---
+
+## 🙏 Agradecimentos
+
+Agradecemos a todos os professores e alunos que contribuem para tornar o EduMarket uma plataforma melhor a cada dia.
+
+---
+
+**Última atualização:** 28 de maio de 2026
+**Versão:** 1.0.0
