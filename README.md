@@ -2,7 +2,6 @@
 
 Uma plataforma moderna de educação online que conecta alunos com professores experientes. O EduMarket oferece cursos de qualidade, agendamento de aulas, comunidade colaborativa e múltiplas formas de pagamento.
 
-**URL de Acesso:** [edumarket-neo8bl9a.manus.space](https://edumarket-neo8bl9a.manus.space)
 
 ---
 
