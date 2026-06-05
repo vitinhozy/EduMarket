@@ -11,37 +11,49 @@ import Payment from "./pages/Payment";
 import TeacherProfile from "./pages/TeacherProfile";
 import Community from "./pages/Community";
 import Courses from "./pages/Courses";
-
+import AuthSuccess from "./pages/AuthSuccess";
+import Profile from "./pages/Profile";
+import Matriculas from "./pages/Matriculas";
+import Favoritos from "./pages/Favoritos";
+import Mensagens from "./pages/Mensagens";
+import Notificacoes from "./pages/Notificacoes";
+import Carrinho from "./pages/Carrinho";
+import Configuracoes from "./pages/Configuracoes";
+import Anuncios from "./pages/Anuncios";
+import MeusAnuncios from "./pages/MeusAnuncios";
+import MinhaAgenda from "./pages/MinhaAgenda";
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/login"} component={Login} />
-      <Route path={"/register"} component={Register} />
-      <Route path={"/payment"} component={Payment} />
-      <Route path={"/teacher/:id"} component={TeacherProfile} />
-      <Route path={"/community"} component={Community} />
-      <Route path={"/courses"} component={Courses} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
+      <Route path="/" component={Home} />
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+      <Route path="/payment" component={Payment} />
+      <Route path="/teacher/:id" component={TeacherProfile} />
+      <Route path="/community" component={Community} />
+      <Route path="/courses" component={Courses} />
+      <Route path="/auth/success" component={AuthSuccess} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/matriculas" component={Matriculas} />
+      <Route path="/favoritos" component={Favoritos} />
+      <Route path="/mensagens" component={Mensagens} />
+      <Route path="/notificacoes" component={Notificacoes} />
+      <Route path="/carrinho" component={Carrinho} />
+      <Route path="/settings" component={Configuracoes} />
+      <Route path="/anuncios" component={Anuncios} />
+      <Route path="/meus-anuncios" component={MeusAnuncios} />
+      <Route path="/minha-agenda" component={MinhaAgenda} />
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="light" switchable>
         <TooltipProvider>
           <Toaster />
           <Router />
