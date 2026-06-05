@@ -1,5 +1,7 @@
 import express from "express";
 import { eq } from "drizzle-orm";
+import multer from "multer";
+import path from "path";
 
 import { db } from "./db";
 import {
@@ -8,11 +10,27 @@ import {
   aulas,
   comentarios,
   matriculas,
-} from "./schema";
+} from "./db/schema";
 
 const app = express();
 
 app.use(express.json());
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, "uploads/");
+  },
+
+  filename: (_req, file, cb) => {
+    cb(
+      null,
+      Date.now() + "-" + file.originalname.replace(/\s+/g, "_")
+    );
+  },
+});
+
+const upload = multer({ storage });
+
+app.use("/uploads", express.static("uploads"));
 
 /* =====================================================
    TESTE API
@@ -21,6 +39,43 @@ app.get("/", (_req, res) => {
   res.json({
     message: "🚀 API funcionando!",
   });
+});
+/* =====================================================
+   LOGIN
+===================================================== */
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+
+    const usuario = await db
+      .select()
+      .from(usuarios)
+      .where(eq(usuarios.email, email));
+
+    if (usuario.length === 0) {
+      return res.status(401).json({
+        error: "Usuário não encontrado",
+      });
+    }
+
+    if (usuario[0].senha !== senha) {
+      return res.status(401).json({
+        error: "Senha incorreta",
+      });
+    }
+
+    res.json({
+      message: "Login realizado com sucesso!",
+      usuario: usuario[0],
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      error: "Erro ao realizar login",
+    });
+  }
 });
 
 /* =====================================================
@@ -49,27 +104,30 @@ app.get("/usuarios/:id", async (req, res) => {
 /* CRIAR */
 app.post("/usuarios", async (req, res) => {
   try {
-    const { nome, email, senha } = req.body;
+    const { nome, email, senha, tipo } = req.body;
 
     await db.insert(usuarios).values({
       nome,
       email,
       senha,
+      tipo,
     });
 
     res.json({
       message: "Usuário criado com sucesso!",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     res.status(500).json({
       error: "Erro ao criar usuário",
+      details: error,
     });
   }
 });
 
 /* ATUALIZAR */
+
 app.put("/usuarios/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -481,6 +539,46 @@ app.delete("/matriculas/:id", async (req, res) => {
     });
   }
 });
+
+/* =====================================================
+   UPLOAD FOTO PERFIL
+===================================================== */
+
+app.post(
+  "/upload/:id",
+  upload.single("foto"),
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!req.file) {
+        return res.status(400).json({
+          error: "Nenhum arquivo enviado",
+        });
+      }
+
+      const caminhoFoto = `/uploads/${req.file.filename}`;
+
+      await db
+        .update(usuarios)
+        .set({
+          foto: caminhoFoto,
+        })
+        .where(eq(usuarios.id, id));
+
+      res.json({
+        message: "Foto enviada com sucesso!",
+        foto: caminhoFoto,
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        error: "Erro ao enviar foto",
+      });
+    }
+  }
+);
 
 /* =====================================================
    START SERVER
