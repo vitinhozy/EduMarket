@@ -224,6 +224,19 @@ export default defineConfig({
     port: 3000,
     strictPort: false, // Will find next available port if 3000 is busy
     host: true,
+    // ==================== CONFIGURAÇÃO DO PROXY ADICIONADA ====================
+    // Redireciona de forma transparente requisições da porta 3000 para o Express na porta 3333
+    proxy: {
+      "/auth": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+      },
+      "/usuarios": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+      },
+    },
+    // ==========================================================================
     allowedHosts: [
       ".manuspre.computer",
       ".manus.computer",
