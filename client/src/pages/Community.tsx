@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Navigation } from '@/components/Navigation';
+import { useLang } from '@/contexts/LangContext';
+import { PageWrapper } from '@/components/PageWrapper';
 import { Heart, MessageCircle, Share2, Search, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -98,7 +100,7 @@ export default function Community() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+    <PageWrapper>
       <Navigation />
       <div className="py-12 px-4">
       <div className="max-w-4xl mx-auto">
@@ -248,6 +250,6 @@ export default function Community() {
         </div>
       </div>
     </div>
-    </div>
+    </PageWrapper>
   );
 }

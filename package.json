@@ -70,7 +70,13 @@
     "@libsql/client": "^0.6.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "express-session": "^1.18.0"
+    "express-session": "^1.18.0",
+    "bcrypt": "^5.1.1",
+    "helmet": "^8.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "stripe": "^14.21.0",
+    "resend": "^3.2.0"
   },
   "devDependencies": {
     "@builder.io/vite-plugin-jsx-loc": "^0.1.1",
@@ -99,7 +105,9 @@
     "concurrently": "^8.2.2",
     "@types/passport": "^1.0.16",
     "@types/passport-google-oauth20": "^2.0.16",
-    "@types/express-session": "^1.18.0"
+    "@types/express-session": "^1.18.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17"
   },
   "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
   "pnpm": {

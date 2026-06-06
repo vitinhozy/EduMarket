@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { Navigation } from '@/components/Navigation';
+import { PageWrapper } from '@/components/PageWrapper';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Settings, Trash2, Moon, Sun, Globe } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
-import { t, languages, getLang, setLang, type Lang } from '@/lib/i18n';
+import { languages, type Lang } from '@/lib/i18n';
+import { useLang } from '@/contexts/LangContext';
 
 export default function Configuracoes() {
   const [, setLocation] = useLocation();
   const [usuario, setUsuario] = useState<any>(null);
   const { theme, toggleTheme } = useTheme();
-  const [langAtual, setLangAtual] = useState<Lang>(getLang());
+  const { lang: langAtual, setLang, t } = useLang();
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
@@ -28,12 +30,11 @@ export default function Configuracoes() {
   };
 
   const handleLang = (code: Lang) => {
-    setLangAtual(code);
     setLang(code);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <PageWrapper>
       <Navigation />
       <div className="max-w-2xl mx-auto px-4 py-10">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">{t('settings_title')}</h1>
@@ -137,6 +138,6 @@ export default function Configuracoes() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

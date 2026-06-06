@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Navigation } from '@/components/Navigation';
+import { useLang } from '@/contexts/LangContext';
+import { PageWrapper } from '@/components/PageWrapper';
 import { Calendar, Clock, Star, Users, BookOpen, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -66,7 +68,7 @@ export default function TeacherProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+    <PageWrapper>
       <Navigation />
       <div className="py-12 px-4">
       <div className="max-w-6xl mx-auto">
@@ -301,6 +303,6 @@ export default function TeacherProfile() {
         </div>
       </div>
     </div>
-    </div>
+    </PageWrapper>
   );
 }

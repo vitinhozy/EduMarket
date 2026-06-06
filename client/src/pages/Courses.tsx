@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Navigation } from '@/components/Navigation';
+import { useLang } from '@/contexts/LangContext';
+import { PageWrapper } from '@/components/PageWrapper';
 import { PlayCircle, Clock, BookOpen, Users, Star, Download, Share2, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -100,7 +102,7 @@ export default function Courses() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+    <PageWrapper>
       <Navigation />
       <div className="py-12 px-4">
       <div className="max-w-7xl mx-auto">
@@ -282,6 +284,6 @@ export default function Courses() {
         )}
       </div>
     </div>
-    </div>
+    </PageWrapper>
   );
 }
