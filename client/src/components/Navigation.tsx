@@ -52,8 +52,8 @@ export function Navigation() {
     setLocation('/');
   };
 
-  const getInitials = (nome: string) =>
-    nome.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+  const getInitials = (nome?: string) =>
+    (nome || '?').split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
 
   const navItems = [
     { label: t('nav_courses'), href: '/courses' },

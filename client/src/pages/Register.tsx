@@ -7,13 +7,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Navigation } from '@/components/Navigation';
 import { PageWrapper } from '@/components/PageWrapper';
+import { useLang } from '@/contexts/LangContext';
 import { toast } from 'sonner';
+import { CheckCircle, Mail, ArrowLeft } from 'lucide-react';
 
 export default function Register() {
   const { t } = useLang();
   const [, setLocation] = useLocation();
   const [role, setRole] = useState<'student' | 'teacher'>('student');
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<'form' | 'verify' | 'success'>('form');
+  const [code, setCode] = useState('');
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '',
     phone: '', specialization: '', hourlyRate: '',
@@ -50,21 +54,18 @@ export default function Register() {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        toast.error('Erro ao criar conta. Tente novamente.');
+        toast.error(data.error || 'Erro ao criar conta. Tente novamente.');
         return;
       }
 
-      const usuarios = await fetch('/api/usuarios').then(r => r.json());
-      const usuario = usuarios.find((u: any) => u.email === formData.email);
-
-      if (usuario) {
-        localStorage.setItem('user', JSON.stringify({
-          id: usuario.id,
-          nome: usuario.nome,
-          email: usuario.email,
-        }));
-      }
+      localStorage.setItem('user', JSON.stringify({
+        id: data.usuario.id,
+        nome: data.usuario.nome,
+        email: data.usuario.email,
+      }));
 
       toast.success(`Conta criada com sucesso! Bem-vindo, ${formData.name}!`);
       setLocation('/');
@@ -338,6 +339,6 @@ export default function Register() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
