@@ -322,7 +322,7 @@ async function startServer() {
   });
 
   app.get("/api/anuncios", async (_req, res) => {
-    const lista = await db.select().from(aulas);
+    const lista = await db.select().from(anuncios);
     res.json(lista);
   });
 

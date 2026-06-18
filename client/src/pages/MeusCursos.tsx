@@ -145,9 +145,17 @@ const DEFAULT = {
 };
 
 function getData(titulo: string) {
+  const tituloLower = titulo.toLowerCase();
   for (const key of Object.keys(VIDEOS)) {
-    if (titulo.includes(key)) return VIDEOS[key];
+    if (tituloLower.includes(key.toLowerCase())) return VIDEOS[key];
   }
+  // Fallbacks por palavras-chave comuns
+  if (tituloLower.includes('web') || tituloLower.includes('html') || tituloLower.includes('react')) return VIDEOS['Desenvolvimento Web'];
+  if (tituloLower.includes('python') || tituloLower.includes('data')) return VIDEOS['Python'];
+  if (tituloLower.includes('design') || tituloLower.includes('ux') || tituloLower.includes('ui')) return VIDEOS['UI/UX'];
+  if (tituloLower.includes('flutter') || tituloLower.includes('mobile') || tituloLower.includes('dart')) return VIDEOS['Flutter'];
+  if (tituloLower.includes('docker') || tituloLower.includes('devops') || tituloLower.includes('kubernetes')) return VIDEOS['DevOps'];
+  if (tituloLower.includes('banco') || tituloLower.includes('sql') || tituloLower.includes('nosql') || tituloLower.includes('mongodb')) return VIDEOS['Banco de Dados'];
   return DEFAULT;
 }
 
@@ -175,16 +183,9 @@ export default function MeusCursos() {
     const stored = localStorage.getItem('user');
     if (!stored) { setLocation('/login'); return; }
 
-    // Carregar apenas cursos válidos (que existem no VIDEOS)
+    // Carregar todos os cursos comprados
     const raw = JSON.parse(localStorage.getItem('meus_cursos') || '[]');
-    const validos = raw.filter((c: Curso) =>
-      Object.keys(VIDEOS).some(key => c.titulo.includes(key))
-    );
-    // Se havia cursos fictícios, limpar
-    if (validos.length !== raw.length) {
-      localStorage.setItem('meus_cursos', JSON.stringify(validos));
-    }
-    setCursos(validos);
+    setCursos(raw);
   }, []);
 
   // Auto carrossel

@@ -1,154 +1,114 @@
 import { createClient } from "@libsql/client";
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-<<<<<<< HEAD
-const __dirname = path.dirname(__filename);
-const DB_PATH = path.resolve(__dirname, "database.db");
-=======
-const __dirname  = path.dirname(__filename);
-const DB_PATH    = path.resolve(__dirname, "database.db");
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
+const client = createClient({ url: "file:database.db" });
 
-const client = createClient({ url: `file:${DB_PATH}` });
+const statements = [
+  // Tabelas
+  `CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT NOT NULL,
+    senha TEXT NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS categorias (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS aulas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titulo TEXT NOT NULL,
+    descricao TEXT NOT NULL,
+    categoria_id INTEGER NOT NULL,
+    video_id TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS comentarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    texto TEXT NOT NULL,
+    usuario_id INTEGER NOT NULL,
+    aula_id INTEGER NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS matriculas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    aula_id INTEGER NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS favoritos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    consumidor_id INTEGER NOT NULL,
+    prestador_id INTEGER NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS anuncios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titulo TEXT NOT NULL,
+    descricao TEXT NOT NULL,
+    preco INTEGER NOT NULL,
+    prestador_id INTEGER NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS agenda (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    prestador_id INTEGER NOT NULL,
+    data TEXT NOT NULL,
+    horario TEXT NOT NULL,
+    disponivel INTEGER NOT NULL DEFAULT 1
+  )`,
 
-await client.execute(`CREATE TABLE IF NOT EXISTS usuarios (
-<<<<<<< HEAD
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  nome TEXT NOT NULL,
-  email TEXT NOT NULL,
-=======
-  id    INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  nome  TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE,
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
-  senha TEXT NOT NULL
-)`);
+  // Adicionar video_id caso a tabela aulas já exista sem essa coluna
+  `ALTER TABLE aulas ADD COLUMN video_id TEXT`,
 
-await client.execute(`CREATE TABLE IF NOT EXISTS categorias (
-<<<<<<< HEAD
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-=======
-  id   INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
-  nome TEXT NOT NULL
-)`);
+  // Categorias
+  `INSERT OR IGNORE INTO categorias (id, nome) VALUES (1, 'Programação Web')`,
+  `INSERT OR IGNORE INTO categorias (id, nome) VALUES (2, 'Data Science')`,
+  `INSERT OR IGNORE INTO categorias (id, nome) VALUES (3, 'Design')`,
+  `INSERT OR IGNORE INTO categorias (id, nome) VALUES (4, 'Mobile')`,
+  `INSERT OR IGNORE INTO categorias (id, nome) VALUES (5, 'DevOps')`,
+  `INSERT OR IGNORE INTO categorias (id, nome) VALUES (6, 'Banco de Dados')`,
 
-await client.execute(`CREATE TABLE IF NOT EXISTS aulas (
-<<<<<<< HEAD
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  titulo TEXT NOT NULL,
-  descricao TEXT NOT NULL,
-  usuario_id INTEGER,
-=======
-  id           INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  titulo       TEXT NOT NULL,
-  descricao    TEXT NOT NULL,
-  usuario_id   INTEGER,
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
-  categoria_id INTEGER
-)`);
+  // Aulas com videoId do YouTube
+  `INSERT OR IGNORE INTO aulas (id, titulo, descricao, categoria_id, video_id)
+   VALUES (1, 'Desenvolvimento Web Completo', 'Aprenda HTML, CSS, JavaScript e muito mais neste curso completo de desenvolvimento web do zero ao profissional.', 1, 'SqcY0GlETPk')`,
+  `INSERT OR IGNORE INTO aulas (id, titulo, descricao, categoria_id, video_id)
+   VALUES (2, 'Python para Data Science', 'Domine Python aplicado à ciência de dados, análise estatística, visualização e machine learning.', 2, 'rfscVS0vtbw')`,
+  `INSERT OR IGNORE INTO aulas (id, titulo, descricao, categoria_id, video_id)
+   VALUES (3, 'UI/UX Design na Prática', 'Aprenda a criar interfaces modernas e experiências de usuário incríveis com ferramentas profissionais.', 3, 'lHOlAEAMIX0')`,
+  `INSERT OR IGNORE INTO aulas (id, titulo, descricao, categoria_id, video_id)
+   VALUES (4, 'Flutter & Dart Mobile', 'Desenvolva aplicativos mobile multiplataforma para iOS e Android com Flutter e Dart.', 4, 'VPvVD8t02U8')`,
+  `INSERT OR IGNORE INTO aulas (id, titulo, descricao, categoria_id, video_id)
+   VALUES (5, 'DevOps e Docker', 'Aprenda Docker, CI/CD, Kubernetes e as melhores práticas de DevOps para o mercado.', 5, 'Wvf0mBNGjXY')`,
+  `INSERT OR IGNORE INTO aulas (id, titulo, descricao, categoria_id, video_id)
+   VALUES (6, 'Banco de Dados SQL e NoSQL', 'Domine bancos de dados relacionais e não relacionais, desde fundamentos até otimização avançada.', 6, 'HXV3zeQKqGY')`,
 
-await client.execute(`CREATE TABLE IF NOT EXISTS comentarios (
-<<<<<<< HEAD
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  texto TEXT NOT NULL,
-  usuario_id INTEGER,
-  aula_id INTEGER
-)`);
+  // Anúncios — títulos compatíveis com as chaves do dicionário VIDEOS em MeusCursos.tsx
+  `INSERT OR IGNORE INTO anuncios (id, titulo, descricao, preco, prestador_id)
+   VALUES (1, 'Desenvolvimento Web Completo', 'Aprenda HTML, CSS, JavaScript, React e Node.js do zero ao profissional.', 9990, 1)`,
+  `INSERT OR IGNORE INTO anuncios (id, titulo, descricao, preco, prestador_id)
+   VALUES (2, 'Python para Data Science', 'Domine Pandas, NumPy e Machine Learning com projetos práticos.', 11990, 1)`,
+  `INSERT OR IGNORE INTO anuncios (id, titulo, descricao, preco, prestador_id)
+   VALUES (3, 'UI/UX Design na Prática', 'Figma, prototipação e design de interfaces modernas.', 8990, 1)`,
+  `INSERT OR IGNORE INTO anuncios (id, titulo, descricao, preco, prestador_id)
+   VALUES (4, 'Flutter & Dart Mobile', 'Desenvolva apps iOS e Android do zero com Flutter.', 10990, 1)`,
+  `INSERT OR IGNORE INTO anuncios (id, titulo, descricao, preco, prestador_id)
+   VALUES (5, 'DevOps e Docker', 'Docker, Kubernetes e pipelines CI/CD na prática.', 12990, 1)`,
+  `INSERT OR IGNORE INTO anuncios (id, titulo, descricao, preco, prestador_id)
+   VALUES (6, 'Banco de Dados SQL e NoSQL', 'PostgreSQL, MongoDB e Redis do básico ao avançado.', 7990, 1)`,
+];
 
-await client.execute(`CREATE TABLE IF NOT EXISTS matriculas (
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  usuario_id INTEGER,
-  aula_id INTEGER
-)`);
+let criadas = 0;
+let ignoradas = 0;
 
-await client.execute(`CREATE TABLE IF NOT EXISTS favoritos (
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  consumidor_id INTEGER NOT NULL,
-  prestador_id INTEGER NOT NULL
-)`);
-
-
-await client.execute(`CREATE TABLE IF NOT EXISTS anuncios (
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  titulo TEXT NOT NULL,
-  descricao TEXT NOT NULL,
-  preco INTEGER NOT NULL,
-=======
-  id         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  texto      TEXT NOT NULL,
-  usuario_id INTEGER,
-  aula_id    INTEGER
-)`);
-
-await client.execute(`CREATE TABLE IF NOT EXISTS matriculas (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  usuario_id INTEGER,
-  aula_id    INTEGER
-)`);
-
-await client.execute(`CREATE TABLE IF NOT EXISTS favoritos (
-  id            INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  consumidor_id INTEGER NOT NULL,
-  prestador_id  INTEGER NOT NULL,
-  UNIQUE(consumidor_id, prestador_id)
-)`);
-
-await client.execute(`CREATE TABLE IF NOT EXISTS anuncios (
-  id           INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  titulo       TEXT NOT NULL,
-  descricao    TEXT NOT NULL,
-  preco        REAL NOT NULL,
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
-  prestador_id INTEGER NOT NULL
-)`);
-
-await client.execute(`CREATE TABLE IF NOT EXISTS agenda (
-<<<<<<< HEAD
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  prestador_id INTEGER NOT NULL,
-  data TEXT NOT NULL,
-  horario TEXT NOT NULL,
-  disponivel INTEGER NOT NULL DEFAULT 1
-)`);
-
-=======
-  id           INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  prestador_id INTEGER NOT NULL,
-  data         TEXT NOT NULL,
-  horario      TEXT NOT NULL,
-  disponivel   INTEGER NOT NULL DEFAULT 1,
-  UNIQUE(prestador_id, data, horario)
-)`);
-
-
-// Seed: Cursos de exemplo para demonstração
-const cursosExistentes = await client.execute(`SELECT COUNT(*) as total FROM anuncios`);
-const total = cursosExistentes.rows[0].total;
-
-if (Number(total) === 0) {
-  const cursos = [
-    { titulo: 'Desenvolvimento Web Completo', descricao: 'HTML, CSS, JavaScript, React e Node.js do zero ao avançado', preco: 99.90, prestador_id: 1 },
-    { titulo: 'Python para Data Science', descricao: 'Aprenda Python, Pandas, NumPy e Machine Learning na prática', preco: 119.90, prestador_id: 1 },
-    { titulo: 'UI/UX Design na Prática', descricao: 'Figma, prototipação e design de interfaces profissionais', preco: 89.90, prestador_id: 1 },
-    { titulo: 'Flutter & Dart Mobile', descricao: 'Crie apps para iOS e Android com Flutter do iniciante ao avançado', preco: 109.90, prestador_id: 1 },
-    { titulo: 'DevOps e Docker', descricao: 'Docker, Kubernetes, CI/CD e infraestrutura em nuvem', preco: 129.90, prestador_id: 1 },
-    { titulo: 'Banco de Dados SQL e NoSQL', descricao: 'PostgreSQL, MongoDB e Redis com projetos reais', preco: 79.90, prestador_id: 1 },
-  ];
-
-  for (const curso of cursos) {
-    await client.execute({
-      sql: `INSERT OR IGNORE INTO anuncios (titulo, descricao, preco, prestador_id) VALUES (?, ?, ?, ?)`,
-      args: [curso.titulo, curso.descricao, curso.preco, curso.prestador_id],
-    });
+for (const sql of statements) {
+  try {
+    await client.execute({ sql, args: [] });
+    criadas++;
+  } catch (err) {
+    // ALTER TABLE falha se coluna já existe — ignorar silenciosamente
+    if (err.message?.includes('duplicate column') || err.message?.includes('already exists')) {
+      ignoradas++;
+    } else {
+      console.warn(`⚠️  Aviso: ${err.message}`);
+      ignoradas++;
+    }
   }
-  console.log("✅ Cursos de exemplo inseridos!");
-} else {
-  console.log("ℹ️  Cursos já existem, pulando seed.");
 }
 
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
-console.log(`✅ Banco criado em: ${DB_PATH}`);
+console.log(`✅ Migração concluída! ${criadas} operações executadas, ${ignoradas} ignoradas.`);
 client.close();
