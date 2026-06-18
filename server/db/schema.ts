@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+=======
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
 
 export const usuarios = sqliteTable("usuarios", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -43,7 +47,11 @@ export const anuncios = sqliteTable("anuncios", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   titulo: text("titulo").notNull(),
   descricao: text("descricao").notNull(),
+<<<<<<< HEAD
   preco: integer("preco").notNull(),
+=======
+  preco: real("preco").notNull(),
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
   prestador_id: integer("prestador_id").notNull(),
 });
 

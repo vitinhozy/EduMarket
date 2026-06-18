@@ -1,18 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { Navigation } from '@/components/Navigation';
+<<<<<<< HEAD
+=======
+import { PageWrapper } from '@/components/PageWrapper';
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Settings, Trash2, Moon, Sun, Globe } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+<<<<<<< HEAD
 import { t, languages, getLang, setLang, type Lang } from '@/lib/i18n';
+=======
+import { languages, type Lang } from '@/lib/i18n';
+import { useLang } from '@/contexts/LangContext';
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
 
 export default function Configuracoes() {
   const [, setLocation] = useLocation();
   const [usuario, setUsuario] = useState<any>(null);
   const { theme, toggleTheme } = useTheme();
+<<<<<<< HEAD
   const [langAtual, setLangAtual] = useState<Lang>(getLang());
+=======
+  const { lang: langAtual, setLang, t } = useLang();
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
@@ -28,12 +41,19 @@ export default function Configuracoes() {
   };
 
   const handleLang = (code: Lang) => {
+<<<<<<< HEAD
     setLangAtual(code);
+=======
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
     setLang(code);
   };
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+=======
+    <PageWrapper>
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
       <Navigation />
       <div className="max-w-2xl mx-auto px-4 py-10">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">{t('settings_title')}</h1>
@@ -137,6 +157,10 @@ export default function Configuracoes() {
           </CardContent>
         </Card>
       </div>
+<<<<<<< HEAD
     </div>
+=======
+    </PageWrapper>
+>>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
   );
 }
