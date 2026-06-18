@@ -229,6 +229,18 @@ export default defineConfig({
         target: "http://localhost:3333",
         changeOrigin: true,
       },
+      "/anuncios": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+      },
+      "/agenda": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+      },
+      "/auth": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+      },
     },
     allowedHosts: [
       ".manuspre.computer",
