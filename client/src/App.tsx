@@ -23,10 +23,9 @@ import Configuracoes from "./pages/Configuracoes";
 import Anuncios from "./pages/Anuncios";
 import MeusAnuncios from "./pages/MeusAnuncios";
 import MinhaAgenda from "./pages/MinhaAgenda";
-<<<<<<< HEAD
-=======
+
 import MeusCursos from "./pages/MeusCursos";
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
+
 
 function Router() {
   return (
@@ -49,10 +48,8 @@ function Router() {
       <Route path="/anuncios" component={Anuncios} />
       <Route path="/meus-anuncios" component={MeusAnuncios} />
       <Route path="/minha-agenda" component={MinhaAgenda} />
-<<<<<<< HEAD
-=======
+
       <Route path="/meus-cursos" component={MeusCursos} />
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -63,19 +60,10 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" switchable>
-<<<<<<< HEAD
         <TooltipProvider>
           <Toaster />
           <Router />
         </TooltipProvider>
-=======
-        <LangProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-          </TooltipProvider>
-        </LangProvider>
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
       </ThemeProvider>
     </ErrorBoundary>
   );

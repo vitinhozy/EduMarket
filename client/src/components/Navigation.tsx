@@ -2,19 +2,11 @@ import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import {
   BookOpen, Menu, X, LogOut, User, Heart,
-<<<<<<< HEAD
   BookMarked, CreditCard, Settings, Bell, ShoppingCart, MessageCircle, Megaphone, CalendarDays
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { t } from '@/lib/i18n';
-=======
-  BookMarked, CreditCard, Settings, Bell, ShoppingCart, MessageCircle, Megaphone, CalendarDays, GraduationCap
-} from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
-import { toast } from 'sonner';
-import { useLang } from '@/contexts/LangContext';
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
 
 export function Navigation() {
   const [, setLocation] = useLocation();
@@ -23,7 +15,6 @@ export function Navigation() {
   const [usuario, setUsuario] = useState<{ id: number; nome: string; email: string } | null>(null);
   const [qtdCarrinho, setQtdCarrinho] = useState(0);
   const [qtdNotifs, setQtdNotifs] = useState(0);
-<<<<<<< HEAD
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,33 +22,16 @@ export function Navigation() {
     if (stored) setUsuario(JSON.parse(stored));
 
     const atualizarContadores = () => {
-=======
-  const { t } = useLang();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const lerStorage = () => {
-      const stored = localStorage.getItem('user');
-      setUsuario(stored ? JSON.parse(stored) : null);
-
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
       const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
       setQtdCarrinho(carrinho.length);
       const notifs = JSON.parse(localStorage.getItem('notificacoes') || '[]');
       setQtdNotifs(notifs.filter((n: any) => !n.lida).length);
     };
 
-<<<<<<< HEAD
     atualizarContadores();
     window.addEventListener('storage', atualizarContadores);
     const interval = setInterval(atualizarContadores, 1000);
     return () => { window.removeEventListener('storage', atualizarContadores); clearInterval(interval); };
-=======
-    lerStorage();
-    window.addEventListener('storage', lerStorage);
-    const interval = setInterval(lerStorage, 500);
-    return () => { window.removeEventListener('storage', lerStorage); clearInterval(interval); };
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
   }, []);
 
   useEffect(() => {
@@ -83,21 +57,9 @@ export function Navigation() {
 
   const navItems = [
     { label: t('nav_courses'), href: '/courses' },
-<<<<<<< HEAD
     { label: t('nav_teachers'), href: '/teacher/1' },
     { label: t('nav_community'), href: '/community' },
     { label: t('nav_ads'), href: '/anuncios' },
-=======
-    { label: t('nav_ads'), href: '/anuncios' },
-    { label: t('nav_community'), href: '/community' },
-  ];
-
-  const navItemsLogado = [
-    { label: t('nav_courses'), href: '/courses' },
-    { label: t('nav_ads'), href: '/anuncios' },
-    { label: t('nav_my_courses'), href: '/meus-cursos' },
-    { label: t('nav_community'), href: '/community' },
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
   ];
 
   const menuItems = [
@@ -129,11 +91,7 @@ export function Navigation() {
 
         {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-5 flex-1">
-<<<<<<< HEAD
           {navItems.map(item => (
-=======
-          {(usuario ? navItemsLogado : navItems).map(item => (
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
             <a
               key={item.href}
               onClick={() => setLocation(item.href)}
@@ -184,11 +142,7 @@ export function Navigation() {
                 )}
               </button>
 
-<<<<<<< HEAD
               <div className="w-px h-6 bg-gray-200 mx-1" />
-=======
-              <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1" />
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
 
               {/* Avatar com dropdown */}
               <div className="relative" ref={dropdownRef}>
@@ -200,67 +154,40 @@ export function Navigation() {
                 </button>
 
                 {dropdownOpen && (
-<<<<<<< HEAD
                   <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50">
 
                     {/* Perfil */}
                     <div className="px-4 py-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-gray-700 dark:to-gray-700 border-b border-gray-100 dark:border-gray-600">
-=======
-                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
-
-                    {/* Perfil */}
-                    <div className="px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 border-b border-purple-700">
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
                           {getInitials(usuario.nome)}
                         </div>
                         <div className="min-w-0">
-<<<<<<< HEAD
                           <p className="font-semibold text-gray-800 text-sm truncate">{usuario.nome}</p>
                           <p className="text-xs text-gray-500 truncate">{usuario.email}</p>
-=======
-                          <p className="font-semibold text-white text-sm truncate">{usuario.nome}</p>
-                          <p className="text-xs text-purple-200 truncate">{usuario.email}</p>
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                         </div>
                       </div>
                     </div>
 
                     {/* Atalhos rápidos */}
-<<<<<<< HEAD
                     <div className="grid grid-cols-3 border-b border-gray-100">
                       <button
                         onClick={() => { setLocation('/mensagens'); setDropdownOpen(false); }}
                         className="flex flex-col items-center gap-1 py-3 hover:bg-purple-50 transition-colors text-gray-600 hover:text-purple-600"
-=======
-                    <div className="grid grid-cols-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                      <button
-                        onClick={() => { setLocation('/mensagens'); setDropdownOpen(false); }}
-                        className="flex flex-col items-center gap-1 py-3 hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                       >
                         <MessageCircle className="w-4 h-4" />
                         <span className="text-xs">{t('nav_messages')}</span>
                       </button>
                       <button
                         onClick={() => { setLocation('/notificacoes'); setDropdownOpen(false); }}
-<<<<<<< HEAD
                         className="flex flex-col items-center gap-1 py-3 hover:bg-purple-50 transition-colors text-gray-600 hover:text-purple-600 border-x border-gray-100"
-=======
-                        className="flex flex-col items-center gap-1 py-3 hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 border-x border-gray-200 dark:border-gray-700"
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                       >
                         <Bell className="w-4 h-4" />
                         <span className="text-xs">{t('nav_alerts')}</span>
                       </button>
                       <button
                         onClick={() => { setLocation('/carrinho'); setDropdownOpen(false); }}
-<<<<<<< HEAD
                         className="flex flex-col items-center gap-1 py-3 hover:bg-purple-50 transition-colors text-gray-600 hover:text-purple-600"
-=======
-                        className="flex flex-col items-center gap-1 py-3 hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                       >
                         <ShoppingCart className="w-4 h-4" />
                         <span className="text-xs">{t('nav_cart')}</span>
@@ -268,11 +195,7 @@ export function Navigation() {
                     </div>
 
                     {/* Menu items */}
-<<<<<<< HEAD
                     <div className="py-1">
-=======
-                    <div className="py-1 bg-white dark:bg-gray-900">
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                       {menuItems.map(item => (
                         <button
                           key={item.href}
@@ -286,17 +209,10 @@ export function Navigation() {
                     </div>
 
                     {/* Sair */}
-<<<<<<< HEAD
                     <div className="border-t border-gray-100">
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors text-left"
-=======
-                    <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors text-left"
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                       >
                         <LogOut className="w-4 h-4 shrink-0" />
                         Sair da conta
@@ -335,11 +251,7 @@ export function Navigation() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-gray-200">
           <nav className="flex flex-col gap-1 p-4">
-<<<<<<< HEAD
             {navItems.map(item => (
-=======
-            {(usuario ? navItemsLogado : navItems).map(item => (
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
               <a
                 key={item.href}
                 onClick={() => { setLocation(item.href); setMobileMenuOpen(false); }}

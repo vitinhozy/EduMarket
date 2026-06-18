@@ -8,44 +8,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Navigation } from '@/components/Navigation';
 import { PageWrapper } from '@/components/PageWrapper';
 import { toast } from 'sonner';
-<<<<<<< HEAD
-=======
-import { useLang } from '@/contexts/LangContext';
-import { Mail, CheckCircle, ArrowLeft } from 'lucide-react';
-
-type Step = 'form' | 'verify' | 'success';
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
 
 export default function Register() {
   const { t } = useLang();
   const [, setLocation] = useLocation();
   const [role, setRole] = useState<'student' | 'teacher'>('student');
-<<<<<<< HEAD
   const [loading, setLoading] = useState(false);
-=======
-  const [step, setStep] = useState<Step>('form');
-  const [loading, setLoading] = useState(false);
-  const [code, setCode] = useState('');
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '',
     phone: '', specialization: '', hourlyRate: '',
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-<<<<<<< HEAD
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-=======
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  // Passo 1: Enviar código de verificação
-  const handleSendCode = async (e: React.FormEvent) => {
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.password) {
@@ -59,7 +38,6 @@ export default function Register() {
     }
 
     setLoading(true);
-<<<<<<< HEAD
 
     try {
       const response = await fetch('/api/usuarios', {
@@ -91,25 +69,6 @@ export default function Register() {
       toast.success(`Conta criada com sucesso! Bem-vindo, ${formData.name}!`);
       setLocation('/');
     } catch (error) {
-=======
-    try {
-      const res = await fetch('/api/auth/send-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.error || 'Erro ao enviar código');
-        return;
-      }
-
-      toast.success(`Código enviado para ${formData.email}!`);
-      setStep('verify');
-    } catch {
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
       toast.error('Erro ao conectar com o servidor');
     } finally {
       setLoading(false);
@@ -286,7 +245,6 @@ export default function Register() {
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               EduMarket
             </CardTitle>
-<<<<<<< HEAD
             <CardDescription>Crie sua conta e comece a aprender ou ensinar</CardDescription>
           </CardHeader>
           <CardContent>
@@ -297,17 +255,6 @@ export default function Register() {
               </TabsList>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-=======
-            <CardDescription>{t('register_title')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={role} onValueChange={(v) => setRole(v as 'student' | 'teacher')} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="student">{t('register_student')}</TabsTrigger>
-                <TabsTrigger value="teacher">{t('register_teacher')}</TabsTrigger>
-              </TabsList>
-              <form onSubmit={handleSendCode} className="space-y-4">
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                 <div className="space-y-2">
                   <Label>{t('register_name')}</Label>
                   <Input name="name" placeholder="Seu nome" value={formData.name} onChange={handleInputChange} required />
@@ -320,7 +267,6 @@ export default function Register() {
                   <Label>{t('register_phone')}</Label>
                   <Input name="phone" placeholder="(11) 99999-9999" value={formData.phone} onChange={handleInputChange} />
                 </div>
-<<<<<<< HEAD
 
                 <TabsContent value="teacher" className="space-y-4 mt-0 p-0">
                   <div className="space-y-2">
@@ -373,32 +319,11 @@ export default function Register() {
                   />
                 </div>
 
-=======
-                <TabsContent value="teacher" className="space-y-4 mt-0 p-0">
-                  <div className="space-y-2">
-                    <Label>{t('register_spec')}</Label>
-                    <Input name="specialization" placeholder="Ex: Programação Web" value={formData.specialization} onChange={handleInputChange} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t('register_rate')}</Label>
-                    <Input name="hourlyRate" type="number" placeholder="50.00" value={formData.hourlyRate} onChange={handleInputChange} />
-                  </div>
-                </TabsContent>
-                <div className="space-y-2">
-                  <Label>{t('register_password')}</Label>
-                  <Input name="password" type="password" placeholder="Mínimo 6 caracteres" value={formData.password} onChange={handleInputChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t('register_confirm')}</Label>
-                  <Input name="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleInputChange} required />
-                </div>
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
                 <Button
                   type="submit"
                   disabled={loading}
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold"
                 >
-<<<<<<< HEAD
                   {loading ? 'Criando conta...' : 'Criar Conta'}
                 </Button>
               </form>
@@ -408,23 +333,11 @@ export default function Register() {
                 <a href="/login" className="text-purple-600 hover:text-purple-700 font-semibold">
                   Faça login
                 </a>
-=======
-                  {loading ? 'Enviando código...' : 'Continuar'}
-                </Button>
-              </form>
-              <div className="mt-4 text-center text-sm text-muted-foreground">
-                {t('register_have_account')}{' '}
-                <a href="/login" className="text-purple-600 hover:text-purple-700 font-semibold">{t('register_login')}</a>
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
               </div>
             </Tabs>
           </CardContent>
         </Card>
       </div>
-<<<<<<< HEAD
     </div>
-=======
-    </PageWrapper>
->>>>>>> 8e5be9631f93ecca59ce4d7f87e6cee7daaa9328
   );
 }
